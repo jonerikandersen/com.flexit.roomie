@@ -1,0 +1,14 @@
+{
+  "type": "enum",
+  "title": { "en": "System mode" },
+  "uiComponent": "picker",
+  "getable": true,
+  "setable": true,
+  "values": [
+    { "id": "away",    "title": { "en": "Away",            "no": "Borte" } },
+    { "id": "normal",  "title": { "en": "Normal",          "no": "Normal" } },
+    { "id": "boost",   "title": { "en": "Boost",           "no": "Boost" } },
+    { "id": "kitchen", "title": { "en": "Kitchen",         "no": "Kjøkken" } },
+    { "id": "summer",  "title": { "en": "Summer circulate","no": "Sommer-sirkulasjon" } }
+  ]
+}

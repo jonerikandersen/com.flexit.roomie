@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- Two fans with opposing airflow arrows = balanced ventilation -->
+  <rect x="8" y="8" width="240" height="240" rx="36" fill="#1e5aa0"/>
+
+  <!-- Fan A (top-left, smaller) -->
+  <g transform="translate(72 84)">
+    <circle r="40" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.4"/>
+    <g fill="#ffffff">
+      <path d="M0 -34 C 10 -25 10 -11 0 -4 C -10 -11 -10 -25 0 -34 Z"/>
+      <path d="M0 -34 C 10 -25 10 -11 0 -4 C -10 -11 -10 -25 0 -34 Z" transform="rotate(72)"/>
+      <path d="M0 -34 C 10 -25 10 -11 0 -4 C -10 -11 -10 -25 0 -34 Z" transform="rotate(144)"/>
+      <path d="M0 -34 C 10 -25 10 -11 0 -4 C -10 -11 -10 -25 0 -34 Z" transform="rotate(216)"/>
+      <path d="M0 -34 C 10 -25 10 -11 0 -4 C -10 -11 -10 -25 0 -34 Z" transform="rotate(288)"/>
+    </g>
+    <circle r="7" fill="#1e5aa0"/>
+    <circle r="3" fill="#ffffff"/>
+  </g>
+
+  <!-- Fan B (bottom-right, smaller) -->
+  <g transform="translate(184 172)">
+    <circle r="40" fill="none" stroke="#ffffff" stroke-width="4" opacity="0.4"/>
+    <g fill="#ffffff">
+      <path d="M0 -34 C 10 -25 10 -11 0 -4 C -10 -11 -10 -25 0 -34 Z"/>
+      <path d="M0 -34 C 10 -25 10 -11 0 -4 C -10 -11 -10 -25 0 -34 Z" transform="rotate(72)"/>
+      <path d="M0 -34 C 10 -25 10 -11 0 -4 C -10 -11 -10 -25 0 -34 Z" transform="rotate(144)"/>
+      <path d="M0 -34 C 10 -25 10 -11 0 -4 C -10 -11 -10 -25 0 -34 Z" transform="rotate(216)"/>
+      <path d="M0 -34 C 10 -25 10 -11 0 -4 C -10 -11 -10 -25 0 -34 Z" transform="rotate(288)"/>
+    </g>
+    <circle r="7" fill="#1e5aa0"/>
+    <circle r="3" fill="#ffffff"/>
+  </g>
+
+  <!-- Opposing airflow arrows between fans (balance indicator) -->
+  <g fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Top arrow flowing right -->
+    <path d="M 100 128 L 156 128"/>
+    <path d="M 148 120 L 158 128 L 148 136"/>
+    <!-- Bottom arrow flowing left -->
+    <path d="M 156 148 L 100 148"/>
+    <path d="M 108 140 L 98 148 L 108 156"/>
+  </g>
+</svg>

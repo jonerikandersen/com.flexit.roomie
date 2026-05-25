@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<style>
+		body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1rem; color: #222; }
+		h2 { margin: 0 0 0.5rem; }
+		.lede { color: #555; font-size: 0.9rem; line-height: 1.4; margin: 0 0 1rem; }
+		.card { background: #f5f8fc; border: 1px solid #d4e0ee; border-radius: 8px; padding: 0.85rem 1rem; margin: 0.75rem 0; font-size: 0.9rem; }
+		.card.ok    { background: #f0faf3; border-color: #b8e1c6; color: #1a5e36; }
+		.card.warn  { background: #fff6e6; border-color: #f0d49a; color: #7a4f08; }
+		.card .count { font-weight: 700; font-size: 1.05rem; }
+		ul { margin: 0.5rem 0; padding-left: 1.25rem; font-size: 0.85rem; color: #555; }
+		li { margin: 0.25rem 0; }
+		button { margin-top: 1rem; width: 100%; padding: 0.75rem; font-size: 1rem; border: 0; border-radius: 6px; background: #1e5aa0; color: white; cursor: pointer; }
+		button:disabled { background: #aaa; cursor: not-allowed; }
+		.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #ccc; border-top-color: #1e5aa0; border-radius: 50%; animation: spin .8s linear infinite; vertical-align: middle; margin-right: 0.4rem; }
+		@keyframes spin { to { transform: rotate(360deg); } }
+	</style>
+</head>
+<body>
+
+	<h2>Balanced Ventilation System</h2>
+	<p class="lede">
+		A virtual device that controls both of your Roomie fans as <strong>one balanced system</strong>.
+	</p>
+	<p class="lede">
+		What you get on top of the individual fan devices:
+	</p>
+	<ul>
+		<li><strong>One speed slider</strong> drives both fans at matching airflow</li>
+		<li><strong>Modes</strong>: Away / Normal / Boost / Kitchen — each with its own speed</li>
+		<li><strong>Auto-boost</strong> on humidity threshold (with hysteresis)</li>
+		<li>Optional <strong>imbalance offset</strong> if your house has pressure bias</li>
+	</ul>
+
+	<div id="status" class="card"><span class="spinner"></span>Checking your Roomie fans…</div>
+
+	<button id="go" disabled>Continue</button>
+
+	<script type="application/javascript">
+		const statusEl = document.getElementById('status');
+		const goBtn = document.getElementById('go');
+
+		(async () => {
+			try {
+				const info = await Homey.emit('preflight');
+				if (info.roomieCount >= 2 && !info.systemExists) {
+					statusEl.className = 'card ok';
+					statusEl.innerHTML = `<span class="count">✓ ${info.roomieCount} Roomie fan${info.roomieCount === 1 ? '' : 's'} paired</span><br>Ready to add the system device.`;
+					goBtn.disabled = false;
+				} else if (info.systemExists) {
+					statusEl.className = 'card warn';
+					statusEl.innerHTML = `A system device already exists.<br>Only one balanced system is supported per app.`;
+				} else {
+					statusEl.className = 'card warn';
+					statusEl.innerHTML = `<span class="count">Only ${info.roomieCount} Roomie fan paired</span><br>Add both fans first under <em>Roomie Fan</em>, then come back here.`;
+				}
+			} catch (e) {
+				statusEl.className = 'card warn';
+				statusEl.textContent = 'Preflight check failed: ' + (e.message || e);
+			}
+		})();
+
+		goBtn.addEventListener('click', () => Homey.nextView());
+	</script>
+</body>
+</html>

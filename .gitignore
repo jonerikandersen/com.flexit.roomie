@@ -1,0 +1,11 @@
+.DS_Store
+node_modules/
+.homeybuild/
+
+# Local-only secrets / scratch
+.env
+.env.*
+*.local
+*.pwd
+scratch-*.js
+reference/

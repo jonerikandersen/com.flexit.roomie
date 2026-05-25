@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<style>
+		body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1rem; color: #222; }
+		h2 { margin: 0 0 0.25rem; }
+		p.lede { color: #666; margin: 0 0 1rem; font-size: 0.9rem; }
+		.spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #ccc; border-top-color: #1e5aa0; border-radius: 50%; animation: spin .8s linear infinite; vertical-align: middle; margin-right: 0.5rem; }
+		@keyframes spin { to { transform: rotate(360deg); } }
+		.fan { display: flex; align-items: center; padding: 0.75rem; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; }
+		.fan:hover { background: #f5f8fc; border-color: #1e5aa0; }
+		.fan .ip { font-weight: 600; font-size: 1rem; }
+		.fan .sub { color: #888; font-size: 0.8rem; }
+		.fan .chevron { margin-left: auto; color: #aaa; font-size: 1.2rem; }
+		.manual { margin-top: 1rem; padding: 1rem; border-top: 1px solid #eee; }
+		.manual label { display: block; margin: 0.5rem 0 0.25rem; font-size: 0.85rem; color: #666; }
+		.manual input { width: 100%; padding: 0.6rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+		.manual button, .rescan { margin-top: 0.75rem; padding: 0.6rem 1rem; font-size: 0.95rem; border: 0; border-radius: 6px; background: #1e5aa0; color: white; cursor: pointer; }
+		.rescan { background: #eee; color: #333; }
+		.error { color: #c33; margin-top: 0.75rem; font-size: 0.9rem; }
+		.empty { color: #888; padding: 0.75rem 0; font-size: 0.9rem; }
+		details { margin-top: 1rem; font-size: 0.9rem; }
+		summary { cursor: pointer; color: #1e5aa0; }
+	</style>
+</head>
+<body>
+
+	<h2>Add a Roomie fan</h2>
+	<p style="margin: 0 0 0.75rem; color: #666; font-size: 0.85rem;">
+		This adds <strong>one physical fan</strong>. If you have two fans and want them coordinated as a balanced system, add each fan first, then add the <em>Balanced Ventilation System</em> device.
+	</p>
+	<p class="lede" id="lede"><span class="spinner"></span>Scanning the network…</p>
+
+	<div id="results"></div>
+
+	<button class="rescan" id="rescan" style="display:none;">Scan again</button>
+
+	<details id="manual-wrap">
+		<summary>Enter IP manually</summary>
+		<div class="manual">
+			<label for="manual-ip">IP address</label>
+			<input type="text" id="manual-ip" placeholder="10.0.20.157" autocomplete="off">
+			<label for="manual-subnet">…or scan a different subnet</label>
+			<input type="text" id="manual-subnet" placeholder="10.0.20" autocomplete="off">
+			<button id="manual-go">Use this</button>
+			<div class="error" id="manual-error"></div>
+		</div>
+	</details>
+
+	<script type="application/javascript">
+		const lede = document.getElementById('lede');
+		const results = document.getElementById('results');
+		const rescanBtn = document.getElementById('rescan');
+		const manualWrap = document.getElementById('manual-wrap');
+		const manualIp = document.getElementById('manual-ip');
+		const manualSubnet = document.getElementById('manual-subnet');
+		const manualGo = document.getElementById('manual-go');
+		const manualError = document.getElementById('manual-error');
+
+		function unitShort(name) {
+			if (!name) return 'Roomie fan';
+			if (name.includes('Duo')) return 'Roomie Dual';
+			return name;
+		}
+
+		function renderList(list) {
+			results.innerHTML = '';
+			if (list.length === 0) {
+				results.innerHTML = '<div class="empty">No fans found on the network. Try entering an IP manually below.</div>';
+				return;
+			}
+			for (const f of list) {
+				const div = document.createElement('div');
+				div.className = 'fan';
+				div.innerHTML =
+					`<div>` +
+						`<div class="ip">${f.ip}</div>` +
+						`<div class="sub">${unitShort(f.unitName)} · ID ${f.deviceId}</div>` +
+					`</div>` +
+					`<div class="chevron">›</div>`;
+				div.addEventListener('click', () => pick(f.ip, f.deviceId, f.unitName));
+				results.appendChild(div);
+			}
+		}
+
+		async function pick(ip, deviceId, unitName) {
+			lede.textContent = `Selected ${ip}`;
+			try {
+				await Homey.emit('select', { ip, deviceId, unitName });
+				await Homey.showView('pin');
+			} catch (err) {
+				lede.innerHTML = '';
+				const e = document.createElement('div');
+				e.className = 'error';
+				e.textContent = (err && err.message) || String(err);
+				lede.appendChild(e);
+			}
+		}
+
+		async function scan(subnets) {
+			lede.innerHTML = '<span class="spinner"></span>Scanning…';
+			rescanBtn.style.display = 'none';
+			results.innerHTML = '';
+			try {
+				const list = await Homey.emit('scan', { subnets: subnets || null });
+				lede.textContent = list.length ? `Found ${list.length} fan${list.length === 1 ? '' : 's'}` : 'No fans found';
+				renderList(list);
+				if (list.length === 0) manualWrap.open = true;
+			} catch (err) {
+				lede.innerHTML = '';
+				const e = document.createElement('div');
+				e.className = 'error';
+				e.textContent = 'Scan failed: ' + ((err && err.message) || String(err));
+				lede.appendChild(e);
+			} finally {
+				rescanBtn.style.display = '';
+			}
+		}
+
+		rescanBtn.addEventListener('click', () => scan());
+
+		manualGo.addEventListener('click', async () => {
+			manualError.textContent = '';
+			const ip = manualIp.value.trim();
+			const subnet = manualSubnet.value.trim();
+			if (ip) {
+				try {
+					const info = await Homey.emit('probe', { ip });
+					await pick(info.ip, info.deviceId, info.unitName);
+				} catch (err) {
+					manualError.textContent = (err && err.message) || String(err);
+				}
+			} else if (subnet) {
+				if (!/^\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(subnet)) {
+					manualError.textContent = 'Subnet must look like "10.0.20" (three octets)';
+					return;
+				}
+				scan([subnet]);
+			} else {
+				manualError.textContent = 'Enter an IP or a subnet prefix.';
+			}
+		});
+
+		// kick off initial scan
+		scan();
+	</script>
+</body>
+</html>

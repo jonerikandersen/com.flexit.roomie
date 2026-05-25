@@ -1,0 +1,16 @@
+{
+  "name": "com.flexit.roomie",
+  "version": "1.0.0",
+  "description": "Homey app for Flexit Roomie WiFi V2 ventilation fans (local UDP)",
+  "main": "app.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "validate": "homey app validate",
+    "install-homey": "homey app install",
+    "run": "homey app run",
+    "test": "node test.js"
+  },
+  "author": "Jon Erik Andersen",
+  "license": "MIT"
+}

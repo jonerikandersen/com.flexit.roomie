@@ -1,0 +1,204 @@
+{
+  "name": {
+    "en": "Balanced Ventilation System",
+    "no": "Balansert ventilasjonssystem"
+  },
+  "description": {
+    "en": "A virtual controller that coordinates TWO Roomie fans as one balanced system. Synchronizes speed, supports Away / Normal / Boost / Kitchen modes, and can auto-boost when humidity rises. Add this AFTER you have paired both physical fans.",
+    "no": "En virtuell styrer som koordinerer TO Roomie-vifter som ett balansert system. Synkroniserer hastighet, støtter Borte / Normal / Boost / Kjøkken-moduser, og kan auto-booste når luftfuktigheten stiger. Legg til DENNE etter at du har paret begge fysiske vifter."
+  },
+  "class": "fan",
+  "capabilities": [
+    "onoff",
+    "dim",
+    "vsystem_mode",
+    "measure_humidity",
+    "alarm_filter"
+  ],
+  "capabilitiesOptions": {
+    "dim": {
+      "title": { "en": "System speed" },
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    },
+    "measure_humidity": {
+      "title": { "en": "Average humidity" }
+    }
+  },
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [],
+  "images": {
+    "small": "/drivers/ventilation-system/assets/images/small.png",
+    "large": "/drivers/ventilation-system/assets/images/large.png"
+  },
+  "pair": [
+    {
+      "id": "intro",
+      "navigation": { "next": "list_devices" }
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": { "next": "add_devices" }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "settings": [
+    {
+      "id": "speed_away",
+      "type": "number",
+      "value": 0.2,
+      "min": 0,
+      "max": 1,
+      "label": { "en": "Speed in Away mode" }
+    },
+    {
+      "id": "speed_normal",
+      "type": "number",
+      "value": 0.5,
+      "min": 0,
+      "max": 1,
+      "label": { "en": "Speed in Normal mode" }
+    },
+    {
+      "id": "speed_boost",
+      "type": "number",
+      "value": 0.9,
+      "min": 0,
+      "max": 1,
+      "label": { "en": "Speed in Boost mode" }
+    },
+    {
+      "id": "speed_kitchen",
+      "type": "number",
+      "value": 1.0,
+      "min": 0,
+      "max": 1,
+      "label": { "en": "Speed in Kitchen mode" }
+    },
+    {
+      "id": "speed_summer",
+      "type": "number",
+      "value": 0.5,
+      "min": 0,
+      "max": 1,
+      "label": { "en": "Speed in Summer circulate mode" }
+    },
+    {
+      "id": "airflow_away",
+      "type": "dropdown",
+      "value": "recovery",
+      "label": { "en": "Airflow strategy: Away" },
+      "values": [
+        { "id": "recovery",  "label": { "en": "Heat recovery (both)" } },
+        { "id": "fresh",     "label": { "en": "Fresh air, no recovery (both)" } },
+        { "id": "crossflow", "label": { "en": "Cross-flow (A supply, B extract)" } },
+        { "id": "keep",      "label": { "en": "Keep current per fan" } }
+      ]
+    },
+    {
+      "id": "airflow_normal",
+      "type": "dropdown",
+      "value": "recovery",
+      "label": { "en": "Airflow strategy: Normal" },
+      "values": [
+        { "id": "recovery",  "label": { "en": "Heat recovery (both)" } },
+        { "id": "fresh",     "label": { "en": "Fresh air, no recovery (both)" } },
+        { "id": "crossflow", "label": { "en": "Cross-flow (A supply, B extract)" } },
+        { "id": "keep",      "label": { "en": "Keep current per fan" } }
+      ]
+    },
+    {
+      "id": "airflow_boost",
+      "type": "dropdown",
+      "value": "recovery",
+      "label": { "en": "Airflow strategy: Boost" },
+      "values": [
+        { "id": "recovery",  "label": { "en": "Heat recovery (both)" } },
+        { "id": "fresh",     "label": { "en": "Fresh air, no recovery (both)" } },
+        { "id": "crossflow", "label": { "en": "Cross-flow (A supply, B extract)" } },
+        { "id": "keep",      "label": { "en": "Keep current per fan" } }
+      ]
+    },
+    {
+      "id": "airflow_kitchen",
+      "type": "dropdown",
+      "value": "crossflow",
+      "label": { "en": "Airflow strategy: Kitchen" },
+      "values": [
+        { "id": "recovery",  "label": { "en": "Heat recovery (both)" } },
+        { "id": "fresh",     "label": { "en": "Fresh air, no recovery (both)" } },
+        { "id": "crossflow", "label": { "en": "Cross-flow (A supply, B extract)" } },
+        { "id": "keep",      "label": { "en": "Keep current per fan" } }
+      ]
+    },
+    {
+      "id": "airflow_summer",
+      "type": "dropdown",
+      "value": "fresh",
+      "label": { "en": "Airflow strategy: Summer" },
+      "values": [
+        { "id": "recovery",  "label": { "en": "Heat recovery (both)" } },
+        { "id": "fresh",     "label": { "en": "Fresh air, no recovery (both)" } },
+        { "id": "crossflow", "label": { "en": "Cross-flow (A supply, B extract)" } },
+        { "id": "keep",      "label": { "en": "Keep current per fan" } }
+      ]
+    },
+    {
+      "id": "humidity_boost_on",
+      "type": "number",
+      "value": 65,
+      "min": 30,
+      "max": 95,
+      "units": { "en": "%RH" },
+      "label": { "en": "Humidity threshold to enter Boost" }
+    },
+    {
+      "id": "humidity_boost_off",
+      "type": "number",
+      "value": 55,
+      "min": 25,
+      "max": 90,
+      "units": { "en": "%RH" },
+      "label": { "en": "Humidity threshold to leave Boost (hysteresis)" }
+    },
+    {
+      "id": "humidity_auto_boost",
+      "type": "checkbox",
+      "value": true,
+      "label": { "en": "Auto-boost on humidity threshold" }
+    },
+    {
+      "id": "min_mode_duration_s",
+      "type": "number",
+      "value": 300,
+      "min": 0,
+      "max": 3600,
+      "units": { "en": "s" },
+      "label": { "en": "Minimum time in a mode before switching" }
+    },
+    {
+      "id": "imbalance_offset_pct",
+      "type": "number",
+      "value": 0,
+      "min": -30,
+      "max": 30,
+      "units": { "en": "%" },
+      "label": { "en": "Imbalance offset (A vs B)" },
+      "hint":  { "en": "Positive = Fan A runs faster than Fan B (compensates pressure bias)" }
+    },
+    {
+      "id": "swap_roles",
+      "type": "checkbox",
+      "value": false,
+      "label": { "en": "Swap roles for cross-flow" },
+      "hint":  { "en": "If cross-flow blows the wrong direction during Kitchen mode, toggle this to invert. (Default: A supplies fresh air, B extracts.)" }
+    }
+  ]
+}

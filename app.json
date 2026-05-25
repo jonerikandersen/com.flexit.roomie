@@ -1,0 +1,892 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "com.flexit.roomie",
+  "version": "1.0.0",
+  "compatibility": ">=12.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "brandColor": "#1e5aa0",
+  "name": {
+    "en": "Flexit Roomie",
+    "no": "Flexit Roomie"
+  },
+  "description": {
+    "en": "Local control of Flexit Roomie WiFi V2 single-room ventilation fans. Pair each fan individually, or add a balanced system device that orchestrates two fans as one — with synchronized speed, modes, and automatic humidity-triggered boost. Communicates over local UDP only (no cloud).",
+    "no": "Lokal styring av Flexit Roomie WiFi V2-vifter. Par hver vifte for seg, eller legg til en balansert system-enhet som styrer to vifter som ett system — med synkronisert hastighet, modus, og automatisk boost ved høy luftfuktighet. Snakker kun lokalt over UDP (ingen sky)."
+  },
+  "category": [
+    "climate"
+  ],
+  "tags": {
+    "en": [
+      "flexit",
+      "roomie",
+      "blauberg",
+      "vento",
+      "ecovent",
+      "ventilation",
+      "balanced"
+    ]
+  },
+  "author": {
+    "name": "Jon Erik Andersen"
+  },
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png"
+  },
+  "flow": {
+    "triggers": [
+      {
+        "title": {
+          "en": "Filter replacement needed"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=roomie"
+          }
+        ],
+        "id": "filter_alarm_on"
+      },
+      {
+        "title": {
+          "en": "System mode changed"
+        },
+        "tokens": [
+          {
+            "name": "mode",
+            "type": "string",
+            "title": {
+              "en": "Mode"
+            }
+          }
+        ],
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=ventilation-system"
+          }
+        ],
+        "id": "vsystem_mode_changed"
+      }
+    ],
+    "conditions": [
+      {
+        "title": {
+          "en": "System !{{is|is not}} in mode"
+        },
+        "titleFormatted": {
+          "en": "System !{{is|is not}} in mode [[mode]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=ventilation-system"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "away",
+                "label": {
+                  "en": "Away"
+                }
+              },
+              {
+                "id": "normal",
+                "label": {
+                  "en": "Normal"
+                }
+              },
+              {
+                "id": "boost",
+                "label": {
+                  "en": "Boost"
+                }
+              },
+              {
+                "id": "kitchen",
+                "label": {
+                  "en": "Kitchen"
+                }
+              },
+              {
+                "id": "summer",
+                "label": {
+                  "en": "Summer circulate"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "vsystem_is_mode"
+      }
+    ],
+    "actions": [
+      {
+        "title": {
+          "en": "Set airflow mode"
+        },
+        "titleFormatted": {
+          "en": "Set airflow mode to [[mode]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=roomie"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "ventilation",
+                "label": {
+                  "en": "Ventilation"
+                }
+              },
+              {
+                "id": "heat_recovery",
+                "label": {
+                  "en": "Heat recovery"
+                }
+              },
+              {
+                "id": "air_supply",
+                "label": {
+                  "en": "Air supply"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "set_roomie_airflow"
+      },
+      {
+        "title": {
+          "en": "Set system mode"
+        },
+        "titleFormatted": {
+          "en": "Set system mode to [[mode]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=ventilation-system"
+          },
+          {
+            "name": "mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "away",
+                "label": {
+                  "en": "Away"
+                }
+              },
+              {
+                "id": "normal",
+                "label": {
+                  "en": "Normal"
+                }
+              },
+              {
+                "id": "boost",
+                "label": {
+                  "en": "Boost"
+                }
+              },
+              {
+                "id": "kitchen",
+                "label": {
+                  "en": "Kitchen"
+                }
+              },
+              {
+                "id": "summer",
+                "label": {
+                  "en": "Summer circulate"
+                }
+              }
+            ]
+          }
+        ],
+        "id": "set_vsystem_mode"
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "Roomie Fan",
+        "no": "Roomie-vifte"
+      },
+      "description": {
+        "en": "One physical Roomie fan, controlled directly. Add one device per fan in your home.",
+        "no": "Én fysisk Roomie-vifte, styrt direkte. Legg til én enhet per vifte i hjemmet."
+      },
+      "class": "fan",
+      "capabilities": [
+        "onoff",
+        "dim",
+        "roomie_speed_level",
+        "roomie_airflow_mode",
+        "measure_humidity",
+        "alarm_filter",
+        "measure_rpm_supply",
+        "measure_rpm_extract",
+        "measure_filter_days_remaining"
+      ],
+      "capabilitiesOptions": {
+        "dim": {
+          "title": {
+            "en": "Manual speed"
+          },
+          "min": 0,
+          "max": 1,
+          "step": 0.01
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/roomie/assets/images/small.png",
+        "large": "/drivers/roomie/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "discover",
+          "navigation": {
+            "next": "pin"
+          }
+        },
+        {
+          "id": "pin",
+          "navigation": {
+            "next": "list_devices"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "settings": [
+        {
+          "id": "device_id",
+          "type": "label",
+          "value": "",
+          "label": {
+            "en": "Device ID"
+          }
+        },
+        {
+          "id": "ip",
+          "type": "text",
+          "value": "",
+          "label": {
+            "en": "IP address"
+          },
+          "hint": {
+            "en": "Update if the fan's IP changes"
+          }
+        },
+        {
+          "id": "pin",
+          "type": "password",
+          "value": "",
+          "label": {
+            "en": "PIN"
+          },
+          "hint": {
+            "en": "The PIN configured in the Roomie/Blauberg app"
+          }
+        },
+        {
+          "id": "role",
+          "type": "dropdown",
+          "value": "A",
+          "label": {
+            "en": "Role in balanced system"
+          },
+          "hint": {
+            "en": "Used by the Ventilation System device to know which fan is which"
+          },
+          "values": [
+            {
+              "id": "A",
+              "label": {
+                "en": "Fan A"
+              }
+            },
+            {
+              "id": "B",
+              "label": {
+                "en": "Fan B"
+              }
+            }
+          ]
+        },
+        {
+          "id": "poll_interval_s",
+          "type": "number",
+          "value": 20,
+          "min": 5,
+          "max": 300,
+          "label": {
+            "en": "Poll interval (seconds)"
+          },
+          "hint": {
+            "en": "Higher = less network traffic and less device beeping"
+          }
+        }
+      ],
+      "id": "roomie"
+    },
+    {
+      "name": {
+        "en": "Balanced Ventilation System",
+        "no": "Balansert ventilasjonssystem"
+      },
+      "description": {
+        "en": "A virtual controller that coordinates TWO Roomie fans as one balanced system. Synchronizes speed, supports Away / Normal / Boost / Kitchen modes, and can auto-boost when humidity rises. Add this AFTER you have paired both physical fans.",
+        "no": "En virtuell styrer som koordinerer TO Roomie-vifter som ett balansert system. Synkroniserer hastighet, støtter Borte / Normal / Boost / Kjøkken-moduser, og kan auto-booste når luftfuktigheten stiger. Legg til DENNE etter at du har paret begge fysiske vifter."
+      },
+      "class": "fan",
+      "capabilities": [
+        "onoff",
+        "dim",
+        "vsystem_mode",
+        "measure_humidity",
+        "alarm_filter"
+      ],
+      "capabilitiesOptions": {
+        "dim": {
+          "title": {
+            "en": "System speed"
+          },
+          "min": 0,
+          "max": 1,
+          "step": 0.01
+        },
+        "measure_humidity": {
+          "title": {
+            "en": "Average humidity"
+          }
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [],
+      "images": {
+        "small": "/drivers/ventilation-system/assets/images/small.png",
+        "large": "/drivers/ventilation-system/assets/images/large.png"
+      },
+      "pair": [
+        {
+          "id": "intro",
+          "navigation": {
+            "next": "list_devices"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "settings": [
+        {
+          "id": "speed_away",
+          "type": "number",
+          "value": 0.2,
+          "min": 0,
+          "max": 1,
+          "label": {
+            "en": "Speed in Away mode"
+          }
+        },
+        {
+          "id": "speed_normal",
+          "type": "number",
+          "value": 0.5,
+          "min": 0,
+          "max": 1,
+          "label": {
+            "en": "Speed in Normal mode"
+          }
+        },
+        {
+          "id": "speed_boost",
+          "type": "number",
+          "value": 0.9,
+          "min": 0,
+          "max": 1,
+          "label": {
+            "en": "Speed in Boost mode"
+          }
+        },
+        {
+          "id": "speed_kitchen",
+          "type": "number",
+          "value": 1,
+          "min": 0,
+          "max": 1,
+          "label": {
+            "en": "Speed in Kitchen mode"
+          }
+        },
+        {
+          "id": "speed_summer",
+          "type": "number",
+          "value": 0.5,
+          "min": 0,
+          "max": 1,
+          "label": {
+            "en": "Speed in Summer circulate mode"
+          }
+        },
+        {
+          "id": "airflow_away",
+          "type": "dropdown",
+          "value": "recovery",
+          "label": {
+            "en": "Airflow strategy: Away"
+          },
+          "values": [
+            {
+              "id": "recovery",
+              "label": {
+                "en": "Heat recovery (both)"
+              }
+            },
+            {
+              "id": "fresh",
+              "label": {
+                "en": "Fresh air, no recovery (both)"
+              }
+            },
+            {
+              "id": "crossflow",
+              "label": {
+                "en": "Cross-flow (A supply, B extract)"
+              }
+            },
+            {
+              "id": "keep",
+              "label": {
+                "en": "Keep current per fan"
+              }
+            }
+          ]
+        },
+        {
+          "id": "airflow_normal",
+          "type": "dropdown",
+          "value": "recovery",
+          "label": {
+            "en": "Airflow strategy: Normal"
+          },
+          "values": [
+            {
+              "id": "recovery",
+              "label": {
+                "en": "Heat recovery (both)"
+              }
+            },
+            {
+              "id": "fresh",
+              "label": {
+                "en": "Fresh air, no recovery (both)"
+              }
+            },
+            {
+              "id": "crossflow",
+              "label": {
+                "en": "Cross-flow (A supply, B extract)"
+              }
+            },
+            {
+              "id": "keep",
+              "label": {
+                "en": "Keep current per fan"
+              }
+            }
+          ]
+        },
+        {
+          "id": "airflow_boost",
+          "type": "dropdown",
+          "value": "recovery",
+          "label": {
+            "en": "Airflow strategy: Boost"
+          },
+          "values": [
+            {
+              "id": "recovery",
+              "label": {
+                "en": "Heat recovery (both)"
+              }
+            },
+            {
+              "id": "fresh",
+              "label": {
+                "en": "Fresh air, no recovery (both)"
+              }
+            },
+            {
+              "id": "crossflow",
+              "label": {
+                "en": "Cross-flow (A supply, B extract)"
+              }
+            },
+            {
+              "id": "keep",
+              "label": {
+                "en": "Keep current per fan"
+              }
+            }
+          ]
+        },
+        {
+          "id": "airflow_kitchen",
+          "type": "dropdown",
+          "value": "crossflow",
+          "label": {
+            "en": "Airflow strategy: Kitchen"
+          },
+          "values": [
+            {
+              "id": "recovery",
+              "label": {
+                "en": "Heat recovery (both)"
+              }
+            },
+            {
+              "id": "fresh",
+              "label": {
+                "en": "Fresh air, no recovery (both)"
+              }
+            },
+            {
+              "id": "crossflow",
+              "label": {
+                "en": "Cross-flow (A supply, B extract)"
+              }
+            },
+            {
+              "id": "keep",
+              "label": {
+                "en": "Keep current per fan"
+              }
+            }
+          ]
+        },
+        {
+          "id": "airflow_summer",
+          "type": "dropdown",
+          "value": "fresh",
+          "label": {
+            "en": "Airflow strategy: Summer"
+          },
+          "values": [
+            {
+              "id": "recovery",
+              "label": {
+                "en": "Heat recovery (both)"
+              }
+            },
+            {
+              "id": "fresh",
+              "label": {
+                "en": "Fresh air, no recovery (both)"
+              }
+            },
+            {
+              "id": "crossflow",
+              "label": {
+                "en": "Cross-flow (A supply, B extract)"
+              }
+            },
+            {
+              "id": "keep",
+              "label": {
+                "en": "Keep current per fan"
+              }
+            }
+          ]
+        },
+        {
+          "id": "humidity_boost_on",
+          "type": "number",
+          "value": 65,
+          "min": 30,
+          "max": 95,
+          "units": {
+            "en": "%RH"
+          },
+          "label": {
+            "en": "Humidity threshold to enter Boost"
+          }
+        },
+        {
+          "id": "humidity_boost_off",
+          "type": "number",
+          "value": 55,
+          "min": 25,
+          "max": 90,
+          "units": {
+            "en": "%RH"
+          },
+          "label": {
+            "en": "Humidity threshold to leave Boost (hysteresis)"
+          }
+        },
+        {
+          "id": "humidity_auto_boost",
+          "type": "checkbox",
+          "value": true,
+          "label": {
+            "en": "Auto-boost on humidity threshold"
+          }
+        },
+        {
+          "id": "min_mode_duration_s",
+          "type": "number",
+          "value": 300,
+          "min": 0,
+          "max": 3600,
+          "units": {
+            "en": "s"
+          },
+          "label": {
+            "en": "Minimum time in a mode before switching"
+          }
+        },
+        {
+          "id": "imbalance_offset_pct",
+          "type": "number",
+          "value": 0,
+          "min": -30,
+          "max": 30,
+          "units": {
+            "en": "%"
+          },
+          "label": {
+            "en": "Imbalance offset (A vs B)"
+          },
+          "hint": {
+            "en": "Positive = Fan A runs faster than Fan B (compensates pressure bias)"
+          }
+        },
+        {
+          "id": "swap_roles",
+          "type": "checkbox",
+          "value": false,
+          "label": {
+            "en": "Swap roles for cross-flow"
+          },
+          "hint": {
+            "en": "If cross-flow blows the wrong direction during Kitchen mode, toggle this to invert. (Default: A supplies fresh air, B extracts.)"
+          }
+        }
+      ],
+      "id": "ventilation-system"
+    }
+  ],
+  "capabilities": {
+    "alarm_filter": {
+      "type": "boolean",
+      "title": {
+        "en": "Filter replacement alarm"
+      },
+      "uiComponent": "sensor",
+      "icon": "/assets/icon.svg",
+      "getable": true,
+      "setable": false
+    },
+    "measure_filter_days_remaining": {
+      "type": "number",
+      "title": {
+        "en": "Filter days remaining"
+      },
+      "units": {
+        "en": "days"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "decimals": 0
+    },
+    "measure_rpm_extract": {
+      "type": "number",
+      "title": {
+        "en": "Extract RPM"
+      },
+      "units": {
+        "en": "rpm"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "decimals": 0
+    },
+    "measure_rpm_supply": {
+      "type": "number",
+      "title": {
+        "en": "Supply RPM"
+      },
+      "units": {
+        "en": "rpm"
+      },
+      "uiComponent": "sensor",
+      "getable": true,
+      "setable": false,
+      "decimals": 0
+    },
+    "roomie_airflow_mode": {
+      "type": "enum",
+      "title": {
+        "en": "Airflow mode"
+      },
+      "uiComponent": "picker",
+      "getable": true,
+      "setable": true,
+      "values": [
+        {
+          "id": "ventilation",
+          "title": {
+            "en": "Ventilation"
+          }
+        },
+        {
+          "id": "heat_recovery",
+          "title": {
+            "en": "Heat recovery"
+          }
+        },
+        {
+          "id": "air_supply",
+          "title": {
+            "en": "Air supply"
+          }
+        }
+      ]
+    },
+    "roomie_speed_level": {
+      "type": "enum",
+      "title": {
+        "en": "Speed level"
+      },
+      "uiComponent": "picker",
+      "getable": true,
+      "setable": true,
+      "values": [
+        {
+          "id": "standby",
+          "title": {
+            "en": "Standby"
+          }
+        },
+        {
+          "id": "low",
+          "title": {
+            "en": "Low"
+          }
+        },
+        {
+          "id": "medium",
+          "title": {
+            "en": "Medium"
+          }
+        },
+        {
+          "id": "high",
+          "title": {
+            "en": "High"
+          }
+        },
+        {
+          "id": "manual",
+          "title": {
+            "en": "Manual"
+          }
+        }
+      ]
+    },
+    "vsystem_mode": {
+      "type": "enum",
+      "title": {
+        "en": "System mode"
+      },
+      "uiComponent": "picker",
+      "getable": true,
+      "setable": true,
+      "values": [
+        {
+          "id": "away",
+          "title": {
+            "en": "Away",
+            "no": "Borte"
+          }
+        },
+        {
+          "id": "normal",
+          "title": {
+            "en": "Normal",
+            "no": "Normal"
+          }
+        },
+        {
+          "id": "boost",
+          "title": {
+            "en": "Boost",
+            "no": "Boost"
+          }
+        },
+        {
+          "id": "kitchen",
+          "title": {
+            "en": "Kitchen",
+            "no": "Kjøkken"
+          }
+        },
+        {
+          "id": "summer",
+          "title": {
+            "en": "Summer circulate",
+            "no": "Sommer-sirkulasjon"
+          }
+        }
+      ]
+    }
+  }
+}

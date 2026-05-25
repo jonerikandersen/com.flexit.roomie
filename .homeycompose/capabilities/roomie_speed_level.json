@@ -1,0 +1,14 @@
+{
+  "type": "enum",
+  "title": { "en": "Speed level" },
+  "uiComponent": "picker",
+  "getable": true,
+  "setable": true,
+  "values": [
+    { "id": "standby", "title": { "en": "Standby" } },
+    { "id": "low",     "title": { "en": "Low" } },
+    { "id": "medium",  "title": { "en": "Medium" } },
+    { "id": "high",    "title": { "en": "High" } },
+    { "id": "manual",  "title": { "en": "Manual" } }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "title": { "en": "System !{{is|is not}} in mode" },
+  "titleFormatted": { "en": "System !{{is|is not}} in mode [[mode]]" },
+  "args": [
+    { "name": "device", "type": "device", "filter": "driver_id=ventilation-system" },
+    {
+      "name": "mode",
+      "type": "dropdown",
+      "values": [
+        { "id": "away",    "label": { "en": "Away" } },
+        { "id": "normal",  "label": { "en": "Normal" } },
+        { "id": "boost",   "label": { "en": "Boost" } },
+        { "id": "kitchen", "label": { "en": "Kitchen" } },
+        { "id": "summer",  "label": { "en": "Summer circulate" } }
+      ]
+    }
+  ]
+}

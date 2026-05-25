@@ -1,0 +1,16 @@
+{
+  "title": { "en": "Set airflow mode" },
+  "titleFormatted": { "en": "Set airflow mode to [[mode]]" },
+  "args": [
+    { "name": "device", "type": "device", "filter": "driver_id=roomie" },
+    {
+      "name": "mode",
+      "type": "dropdown",
+      "values": [
+        { "id": "ventilation",   "label": { "en": "Ventilation" } },
+        { "id": "heat_recovery", "label": { "en": "Heat recovery" } },
+        { "id": "air_supply",    "label": { "en": "Air supply" } }
+      ]
+    }
+  ]
+}

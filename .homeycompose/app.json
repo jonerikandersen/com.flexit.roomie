@@ -1,0 +1,40 @@
+{
+  "id": "com.flexit.roomie",
+  "version": "1.0.0",
+  "compatibility": ">=12.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "brandColor": "#1e5aa0",
+  "name": {
+    "en": "Flexit Roomie",
+    "no": "Flexit Roomie"
+  },
+  "description": {
+    "en": "Local control of Flexit Roomie WiFi V2 single-room ventilation fans. Pair each fan individually, or add a balanced system device that orchestrates two fans as one — with synchronized speed, modes, and automatic humidity-triggered boost. Communicates over local UDP only (no cloud).",
+    "no": "Lokal styring av Flexit Roomie WiFi V2-vifter. Par hver vifte for seg, eller legg til en balansert system-enhet som styrer to vifter som ett system — med synkronisert hastighet, modus, og automatisk boost ved høy luftfuktighet. Snakker kun lokalt over UDP (ingen sky)."
+  },
+  "category": [
+    "climate"
+  ],
+  "tags": {
+    "en": [
+      "flexit",
+      "roomie",
+      "blauberg",
+      "vento",
+      "ecovent",
+      "ventilation",
+      "balanced"
+    ]
+  },
+  "author": {
+    "name": "Jon Erik Andersen"
+  },
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png"
+  }
+}

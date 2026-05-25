@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<style>
+		body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; padding: 1rem; color: #222; }
+		h2 { margin: 0 0 0.25rem; }
+		.summary { background: #f5f8fc; border: 1px solid #d4e0ee; border-radius: 8px; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.9rem; }
+		.summary .ip { font-weight: 600; }
+		.summary .sub { color: #666; font-size: 0.8rem; }
+		label { display: block; margin: 1rem 0 0.25rem; font-size: 0.9rem; color: #666; }
+		input { width: 100%; padding: 0.6rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+		button { margin-top: 1.25rem; width: 100%; padding: 0.75rem; font-size: 1rem; border: 0; border-radius: 6px; background: #1e5aa0; color: white; cursor: pointer; }
+		button:disabled { background: #888; cursor: wait; }
+		.back { margin-top: 0.75rem; background: none; color: #1e5aa0; text-decoration: underline; padding: 0.25rem; }
+		.error { color: #c33; margin-top: 1rem; font-size: 0.9rem; }
+		.ok    { color: #2a7; margin-top: 1rem; font-size: 0.9rem; }
+		.hint  { font-size: 0.8rem; color: #888; margin-top: 0.25rem; }
+	</style>
+</head>
+<body>
+
+	<h2>Enter the fan's PIN</h2>
+
+	<div class="summary" id="summary">Loading…</div>
+
+	<label for="pin">PIN</label>
+	<input type="password" id="pin" inputmode="numeric" autocomplete="off" placeholder="1234">
+	<div class="hint">The PIN you set in the Roomie or Blauberg app for this fan.</div>
+
+	<button id="go">Verify and continue</button>
+	<button class="back" id="back">← back to discovery</button>
+
+	<div id="status"></div>
+
+	<script type="application/javascript">
+		const summary = document.getElementById('summary');
+		const pin = document.getElementById('pin');
+		const go = document.getElementById('go');
+		const back = document.getElementById('back');
+		const status = document.getElementById('status');
+
+		(async () => {
+			try {
+				const sel = await Homey.emit('selection');
+				if (sel && sel.ip) {
+					summary.innerHTML = `<div class="ip">${sel.ip}</div><div class="sub">${sel.unitName || 'Roomie fan'} · ID ${sel.deviceId || '?'}</div>`;
+				} else {
+					summary.textContent = 'No selection — go back to discovery.';
+				}
+			} catch (e) {
+				summary.textContent = 'No selection — go back to discovery.';
+			}
+			pin.focus();
+		})();
+
+		back.addEventListener('click', () => Homey.showView('discover'));
+
+		async function submit() {
+			const v = pin.value.trim();
+			status.textContent = '';
+			status.className = '';
+			if (!v) {
+				status.textContent = 'PIN is required.';
+				status.className = 'error';
+				return;
+			}
+			go.disabled = true;
+			go.textContent = 'Verifying…';
+			try {
+				await Homey.emit('verify', { pin: v });
+				status.textContent = 'Verified ✓';
+				status.className = 'ok';
+				await Homey.nextView();
+			} catch (err) {
+				status.textContent = (err && err.message) || String(err);
+				status.className = 'error';
+				go.disabled = false;
+				go.textContent = 'Verify and continue';
+			}
+		}
+
+		go.addEventListener('click', submit);
+		pin.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(); });
+	</script>
+</body>
+</html>

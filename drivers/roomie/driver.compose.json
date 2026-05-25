@@ -1,0 +1,101 @@
+{
+  "name": {
+    "en": "Roomie Fan",
+    "no": "Roomie-vifte"
+  },
+  "description": {
+    "en": "One physical Roomie fan, controlled directly. Add one device per fan in your home.",
+    "no": "Én fysisk Roomie-vifte, styrt direkte. Legg til én enhet per vifte i hjemmet."
+  },
+  "class": "fan",
+  "capabilities": [
+    "onoff",
+    "dim",
+    "roomie_speed_level",
+    "roomie_airflow_mode",
+    "measure_humidity",
+    "alarm_filter",
+    "measure_rpm_supply",
+    "measure_rpm_extract",
+    "measure_filter_days_remaining"
+  ],
+  "capabilitiesOptions": {
+    "dim": {
+      "title": { "en": "Manual speed" },
+      "min": 0,
+      "max": 1,
+      "step": 0.01
+    }
+  },
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [
+    "lan"
+  ],
+  "images": {
+    "small": "/drivers/roomie/assets/images/small.png",
+    "large": "/drivers/roomie/assets/images/large.png"
+  },
+  "pair": [
+    {
+      "id": "discover",
+      "navigation": { "next": "pin" }
+    },
+    {
+      "id": "pin",
+      "navigation": { "next": "list_devices" }
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": { "next": "add_devices" }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "settings": [
+    {
+      "id": "device_id",
+      "type": "label",
+      "value": "",
+      "label": { "en": "Device ID" }
+    },
+    {
+      "id": "ip",
+      "type": "text",
+      "value": "",
+      "label": { "en": "IP address" },
+      "hint":  { "en": "Update if the fan's IP changes" }
+    },
+    {
+      "id": "pin",
+      "type": "password",
+      "value": "",
+      "label": { "en": "PIN" },
+      "hint":  { "en": "The PIN configured in the Roomie/Blauberg app" }
+    },
+    {
+      "id": "role",
+      "type": "dropdown",
+      "value": "A",
+      "label": { "en": "Role in balanced system" },
+      "hint":  { "en": "Used by the Ventilation System device to know which fan is which" },
+      "values": [
+        { "id": "A", "label": { "en": "Fan A" } },
+        { "id": "B", "label": { "en": "Fan B" } }
+      ]
+    },
+    {
+      "id": "poll_interval_s",
+      "type": "number",
+      "value": 20,
+      "min": 5,
+      "max": 300,
+      "label": { "en": "Poll interval (seconds)" },
+      "hint":  { "en": "Higher = less network traffic and less device beeping" }
+    }
+  ]
+}

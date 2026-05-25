@@ -1,0 +1,8 @@
+{
+  "type": "boolean",
+  "title": { "en": "Filter replacement alarm" },
+  "uiComponent": "sensor",
+  "icon": "/assets/icon.svg",
+  "getable": true,
+  "setable": false
+}

@@ -1,0 +1,9 @@
+{
+  "type": "number",
+  "title": { "en": "Extract RPM" },
+  "units": { "en": "rpm" },
+  "uiComponent": "sensor",
+  "getable": true,
+  "setable": false,
+  "decimals": 0
+}

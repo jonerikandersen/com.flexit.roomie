@@ -1,0 +1,12 @@
+{
+  "type": "enum",
+  "title": { "en": "Airflow mode" },
+  "uiComponent": "picker",
+  "getable": true,
+  "setable": true,
+  "values": [
+    { "id": "ventilation",   "title": { "en": "Ventilation" } },
+    { "id": "heat_recovery", "title": { "en": "Heat recovery" } },
+    { "id": "air_supply",    "title": { "en": "Air supply" } }
+  ]
+}
