@@ -11,6 +11,6 @@
     "run": "homey app run",
     "test": "node test.js"
   },
-  "author": "Jon Erik Andersen",
+  "author": "Lokale Helter",
   "license": "MIT"
 }
